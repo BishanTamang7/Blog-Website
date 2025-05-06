@@ -1,117 +1,135 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Acer
-  Date: 4/19/2025
-  Time: 4:21 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medium-style Page</title>
+  <title>Home - InsightHub</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/home/home.css">
 </head>
 <body>
-<!-- Header/Navigation Bar -->
-<nav class="navbar">
-  <div class="logo">Medium</div>
-
+<header>
+  <div class="logo"><a href="${pageContext.request.contextPath}/index.jsp">InsightHub</a></div>
   <div class="search-container">
-    <div class="search-bar">
-      <svg class="search-icon svg-icon" viewBox="0 0 24 24">
-        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+    <input type="text" id="searchInput" placeholder="Search articles...">
+    <button id="searchButton">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" class="search-input" placeholder="Search">
-    </div>
+    </button>
   </div>
-
-  <div class="right-elements">
-    <div class="write-button">
-      <svg class="write-icon svg-icon" viewBox="0 0 24 24">
-        <path d="M14 4a.5.5 0 0 0 0-1v1zm7 6a.5.5 0 0 0-1 0h1zm-7-7H4v1h10V3zM3 4v16h1V4H3zm1 17h16v-1H4v1zm17-1V10h-1v10h1zm-1 1a1 1 0 0 0 1-1h-1v1zM3 20a1 1 0 0 0 1 1v-1H3zM4 3a1 1 0 0 0-1 1h1V3z"></path>
-        <path d="M17.5 4.5l-8.46 8.46a.25.25 0 0 0-.06.1l-.82 2.47c-.07.2.12.38.31.31l2.47-.82a.25.25 0 0 0 .1-.06L19.5 6.5m-2-2l2.32-2.32c.1-.1.26-.1.36 0l1.64 1.64c.1.1.1.26 0 .36L19.5 6.5"></path>
-      </svg>
-      <span class="write-text">Write</span>
-    </div>
-
-    <div class="profile" id="profileButton">
-      <%= session.getAttribute("userInitial") != null ? session.getAttribute("userInitial") : "D" %>
-      <!-- Profile Dropdown Menu -->
-      <div class="profile-dropdown">
-        <div class="dropdown-item">
-          <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9h4v4h-4v-4zm0-6h4v4h-4V5z"></path>
-          </svg>
-          Profile
+  <div class="nav-links">
+    <a href="#" class="write-link">Write</a>
+    <div class="user-menu">
+      <div class="user-avatar" id="userAvatar">
+        <span class="avatar-text">U</span>
+      </div>
+      <div class="dropdown-menu" id="userDropdown">
+        <div class="dropdown-header">
+          <span class="user-name" id="userName">Username</span>
+          <span class="user-email" id="userEmail">user@example.com</span>
         </div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">
-          <a href="${pageContext.request.contextPath}/logout" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
-            <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
-              <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
-            </svg>
-            Sign out
-          </a>
-        </div>
+        <a href="#" class="dropdown-item">Profile</a>
+        <a href="#" class="dropdown-item">Settings</a>
+        <a href="#" class="dropdown-item" id="logoutBtn">Sign out</a>
       </div>
     </div>
   </div>
-</nav>
+</header>
 
-<!-- Main Content Area (Placeholder) -->
-<main class="main-content">
-  <!-- Success Message Display -->
-  <% if(session.getAttribute("successMessage") != null) { %>
-  <div class="success-message">
-    <%= session.getAttribute("successMessage") %>
-    <% session.removeAttribute("successMessage"); %>
-  </div>
-  <% } %>
-
-  <!-- Content would go here -->
-  <% if(request.getAttribute("articles") != null) { %>
-  <!-- This section would display your articles from the database -->
-  <% } else { %>
-  <p>No articles found</p>
-  <% } %>
-</main>
-
-<!-- Compact Footer with Left-aligned Links -->
-<footer class="footer">
-  <div class="footer-container">
-    <ul class="footer-links">
-      <li class="footer-link"><a href="#">About</a></li>
-      <li class="footer-link"><a href="#">Help</a></li>
-      <li class="footer-link"><a href="#">Privacy</a></li>
-      <li class="footer-link"><a href="#">Terms</a></li>
-      <li class="footer-link"><a href="#">Careers</a></li>
-      <li class="footer-link"><a href="#">Contact</a></li>
-    </ul>
-
-    <div class="footer-right">
-      <div class="footer-social">
-        <!-- Twitter/X Icon -->
-        <svg class="social-icon svg-icon" viewBox="0 0 24 24">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-        </svg>
-
-        <!-- Facebook Icon -->
-        <svg class="social-icon svg-icon" viewBox="0 0 24 24">
-          <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z"></path>
-        </svg>
-
-        <!-- LinkedIn Icon -->
-        <svg class="social-icon svg-icon" viewBox="0 0 24 24">
-          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
-        </svg>
+<div class="container">
+  <div class="sidebar">
+    <nav class="side-nav">
+      <a href="#" class="active"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Home</a>
+      <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> My Stories</a>
+      <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Saved</a>
+      <div class="category-section">
+        <h3>Categories</h3>
+        <a href="#">Technology</a>
+        <a href="#">Business</a>
+        <a href="#">Lifestyle</a>
+        <a href="#">Education</a>
+        <a href="#">Health</a>
+        <a href="#">+ More</a>
       </div>
-      <div class="copyright">
-        © 2025 Medium
+    </nav>
+  </div>
+
+  <main class="content">
+    <div class="for-you-section">
+      <h2>For You</h2>
+      <div class="article-grid">
+        <!-- Articles will be dynamically generated here -->
       </div>
     </div>
+
+    <div class="trending-section">
+      <h2>Trending on The Daily Idea</h2>
+      <div class="trending-articles">
+        <!-- Trending articles will be dynamically generated here -->
+      </div>
+    </div>
+  </main>
+
+  <div class="right-sidebar">
+    <div class="profile-card">
+      <div class="large-avatar">
+        <span class="avatar-text" id="largeAvatarText">U</span>
+      </div>
+      <h3 id="profileName">Username</h3>
+      <p class="profile-bio">Welcome to The Daily Idea! Complete your profile to start sharing your ideas with the world.</p>
+      <a href="#" class="edit-profile-btn">Edit Profile</a>
+    </div>
+
+    <div class="suggestions-card">
+      <h3>Who to follow</h3>
+      <div class="suggested-users">
+        <!-- Suggested users will be dynamically generated here -->
+      </div>
+      <a href="#" class="see-more-link">See more</a>
+    </div>
+  </div>
+</div>
+
+<div id="newPostModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Create a new post</h2>
+    <form id="newPostForm">
+      <div class="form-group">
+        <input type="text" id="postTitle" placeholder="Title" required>
+      </div>
+      <div class="form-group">
+        <select id="postCategory" required>
+          <option value="" disabled selected>Select a category</option>
+          <option value="technology">Technology</option>
+          <option value="business">Business</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="education">Education</option>
+          <option value="health">Health</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <textarea id="postContent" placeholder="Write your story..." required></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="save-draft-btn">Save as draft</button>
+        <button type="submit" class="publish-btn">Publish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="#">Help</a>
+    <a href="#">Status</a>
+    <a href="#">About</a>
+    <a href="#">Blog</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
   </div>
 </footer>
 
