@@ -1,38 +1,20 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Daily Idea</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/front-page/style.css">
+    <title>InsightHub</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/landing-page.css">
 </head>
 <body>
-<%-- Display message if present in URL parameters or request attributes --%>
-<% 
-   // Check for message in request attributes first
-   String message = (String) request.getAttribute("message");
-
-   // If not found in attributes, check URL parameters
-   if (message == null) {
-       message = request.getParameter("message");
-   }
-
-   if (message != null && !message.isEmpty()) { 
-%>
-<div id="messageAlert" class="alert alert-success">
-    <%= message %>
-    <span class="close-alert" onclick="this.parentElement.style.display='none';">&times;</span>
-</div>
-<% } %>
-
 <header>
-    <div class="logo"><a href="${pageContext.request.contextPath}/index.jsp">The Daily Idea</a></div>
+    <div class="logo"><a href="${pageContext.request.contextPath}/index.jsp">InsightHub</a></div>
     <div class="nav-links">
         <a href="#">Our story</a>
         <a href="#" class="write-link">Write</a>
-        <a href="${pageContext.request.contextPath}/login">Login</a>
-        <a href="${pageContext.request.contextPath}/signup">Register</a>
+        <a href="${pageContext.request.contextPath}/LoginServlet">Login</a>
+        <a href="${pageContext.request.contextPath}/RegisterServlet">Register</a>
     </div>
 </header>
 
@@ -58,8 +40,8 @@
         <h2>Sign in required</h2>
         <p>Please login to access this feature.</p>
         <div class="modal-buttons">
-            <a href="${pageContext.request.contextPath}/login" class="modal-login-btn">Login</a>
-            <a href="${pageContext.request.contextPath}/signup" class="modal-register-btn">Register</a>
+            <a href="${pageContext.request.contextPath}/LoginServlet" class="modal-login-btn">Login</a>
+            <a href="${pageContext.request.contextPath}/RegisterServlet" class="modal-register-btn">Register</a>
         </div>
     </div>
 </div>
@@ -75,6 +57,6 @@
     </div>
 </footer>
 
-<script src="${pageContext.request.contextPath}/assets/js/front-page/script.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/landing-page.js"></script>
 </body>
 </html>

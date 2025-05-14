@@ -3,4 +3,63 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+
+    <!-- Session Configuration -->
+    <session-config>
+        <session-timeout>15</session-timeout> <!-- in minutes -->
+    </session-config>
+
+    <!-- Servlet Mappings -->
+    <servlet>
+        <servlet-name>UserManagementServlet</servlet-name>
+        <servlet-class>com.example.blog_website.controllers.admin.UserManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserManagementServlet</servlet-name>
+        <url-pattern>/admin/user-management</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostManagementServlet</servlet-name>
+        <servlet-class>com.example.blog_website.controllers.admin.PostManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostManagementServlet</servlet-name>
+        <url-pattern>/admin/post-management</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <servlet-class>com.example.blog_website.controllers.admin.CategoryManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <url-pattern>/admin/category-management</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <url-pattern>/admin/category/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <url-pattern>/admin/category/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <url-pattern>/admin/category/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryManagementServlet</servlet-name>
+        <url-pattern>/admin/category/get</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReportManagementServlet</servlet-name>
+        <servlet-class>com.example.blog_website.controllers.admin.ReportManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportManagementServlet</servlet-name>
+        <url-pattern>/admin/report-management</url-pattern>
+    </servlet-mapping>
+
 </web-app>
