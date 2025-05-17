@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS insight_db;
-USE insight_db;
+CREATE DATABASE IF NOT EXISTS blog_db;
+USE blog_db;
 
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (

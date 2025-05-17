@@ -1,4 +1,4 @@
-package com.example.blog_website.controllers.user;
+package com.example.blog_website.controllers.admin;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -6,11 +6,11 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "UserDashboardServlet", value = "/user/user-dashboard")
-public class UserDashboardServlet extends HttpServlet {
+@WebServlet(name = "ReportManagementServlet", value = "/admin/report-management")
+public class ReportManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/user/user-dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/report-management.jsp").forward(request, response);
     }
 
     @Override
