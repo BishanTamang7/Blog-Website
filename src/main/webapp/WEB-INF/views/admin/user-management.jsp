@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,30 +138,37 @@
           </tr>
           </thead>
           <tbody>
-          <c:forEach var="user" items="${users}">
+          <% 
+            java.util.List<com.example.blog_website.models.User> users = 
+                (java.util.List<com.example.blog_website.models.User>) request.getAttribute("users");
+            if (users != null && !users.isEmpty()) {
+                for (com.example.blog_website.models.User user : users) {
+          %>
             <tr>
-              <td>${user.username}</td>
-              <td>${user.email}</td>
+              <td><%= user.getUsername() %></td>
+              <td><%= user.getEmail() %></td>
               <td>
-                <span class="badge ${user.role == 'ADMIN' ? 'badge-primary' : 'badge-success'}">
-                    ${user.role}
+                <span class="badge <%= "ADMIN".equals(user.getRole()) ? "badge-primary" : "badge-success" %>">
+                    <%= user.getRole() %>
                 </span>
               </td>
-              <td>${user.createdAt}</td>
+              <td><%= user.getCreatedAt() %></td>
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-primary" data-modal="edit-user-modal" data-user-id="${user.id}">Edit</button>
-                  <button class="btn btn-sm btn-warning" data-modal="reset-password-modal" data-user-id="${user.id}">Reset Password</button>
-                  <button class="btn btn-sm btn-danger" data-modal="delete-user-modal" data-user-id="${user.id}">Delete</button>
+                  <button class="btn btn-sm btn-primary" data-modal="edit-user-modal" data-user-id="<%= user.getId() %>">Edit</button>
+                  <button class="btn btn-sm btn-warning" data-modal="reset-password-modal" data-user-id="<%= user.getId() %>">Reset Password</button>
+                  <button class="btn btn-sm btn-danger" data-modal="delete-user-modal" data-user-id="<%= user.getId() %>">Delete</button>
                 </div>
               </td>
             </tr>
-          </c:forEach>
-          <c:if test="${empty users}">
+          <% 
+                }
+            } else {
+          %>
             <tr>
               <td colspan="5">No users found</td>
             </tr>
-          </c:if>
+          <% } %>
           </tbody>
         </table>
       </div>

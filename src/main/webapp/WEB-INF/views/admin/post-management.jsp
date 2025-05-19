@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,53 +137,67 @@
           </tr>
           </thead>
           <tbody>
-          <c:forEach var="post" items="${posts}">
+          <% 
+            java.util.List<java.util.Map<String, Object>> posts = 
+                (java.util.List<java.util.Map<String, Object>>) request.getAttribute("posts");
+            if (posts != null) {
+                for (java.util.Map<String, Object> post : posts) {
+                    String status = (String) post.get("status");
+          %>
             <tr>
-              <td>${post.title}</td>
-              <td>${post.author}</td>
-              <td>${post.category}</td>
-              <td><fmt:formatDate value="${post.createdAt}" pattern="yyyy-MM-dd" /></td>
+              <td><%= post.get("title") %></td>
+              <td><%= post.get("author") %></td>
+              <td><%= post.get("category") %></td>
+              <td><%= post.get("createdAt") != null ? post.get("createdAt").toString().split(" ")[0] : "" %></td>
               <td>
-                <c:choose>
-                  <c:when test="${post.status eq 'PUBLISHED'}">
+                <% if ("PUBLISHED".equals(status)) { %>
                     <span class="badge badge-success">Published</span>
-                  </c:when>
-                  <c:otherwise>
+                <% } else { %>
                     <span class="badge badge-warning">Draft</span>
-                  </c:otherwise>
-                </c:choose>
+                <% } %>
               </td>
-              <td>${post.views}</td>
+              <td><%= post.get("views") %></td>
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-primary" data-modal="view-post-modal" data-post-id="${post.id}">View</button>
-                  <button class="btn btn-sm btn-danger" data-modal="delete-post-modal" data-post-id="${post.id}">Delete</button>
+                  <button class="btn btn-sm btn-primary" data-modal="view-post-modal" data-post-id="<%= post.get("id") %>">View</button>
+                  <button class="btn btn-sm btn-danger" data-modal="delete-post-modal" data-post-id="<%= post.get("id") %>">Delete</button>
                 </div>
               </td>
             </tr>
-          </c:forEach>
+          <% 
+                }
+            }
+          %>
           </tbody>
         </table>
       </div>
       <div class="pagination">
-        <c:if test="${currentPage > 1}">
-          <a href="?page=${currentPage - 1}" class="pagination-item">Previous</a>
-        </c:if>
+        <% 
+          Integer currentPage = (Integer) request.getAttribute("currentPage");
+          Integer totalPages = (Integer) request.getAttribute("totalPages");
 
-        <c:forEach begin="1" end="${totalPages}" var="i">
-          <c:choose>
-            <c:when test="${currentPage == i}">
-              <span class="pagination-item active">${i}</span>
-            </c:when>
-            <c:otherwise>
-              <a href="?page=${i}" class="pagination-item">${i}</a>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
+          if (currentPage != null && currentPage > 1) {
+        %>
+          <a href="?page=<%= currentPage - 1 %>" class="pagination-item">Previous</a>
+        <% } %>
 
-        <c:if test="${currentPage < totalPages}">
-          <a href="?page=${currentPage + 1}" class="pagination-item">Next</a>
-        </c:if>
+        <% 
+          if (totalPages != null) {
+            for (int i = 1; i <= totalPages; i++) {
+              if (currentPage != null && currentPage == i) {
+        %>
+              <span class="pagination-item active"><%= i %></span>
+        <%  } else { %>
+              <a href="?page=<%= i %>" class="pagination-item"><%= i %></a>
+        <%  
+              }
+            }
+          }
+
+          if (currentPage != null && totalPages != null && currentPage < totalPages) {
+        %>
+          <a href="?page=<%= currentPage + 1 %>" class="pagination-item">Next</a>
+        <% } %>
       </div>
     </div>
   </main>

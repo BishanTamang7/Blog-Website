@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,22 +118,29 @@
       <div style="padding: 20px;">
         <!-- Simple bar chart representation -->
         <div style="display: flex; flex-direction: column; gap: 15px;">
-          <c:forEach var="category" items="${categoryDistribution}">
+          <% 
+            java.util.List<java.util.Map<String, Object>> categoryDistribution = 
+                (java.util.List<java.util.Map<String, Object>>) request.getAttribute("categoryDistribution");
+            if (categoryDistribution != null && !categoryDistribution.isEmpty()) {
+                for (java.util.Map<String, Object> category : categoryDistribution) {
+          %>
             <div>
               <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>${category.name}</span>
-                <span>${category.postCount} posts (${category.percentage}%)</span>
+                <span><%= category.get("name") %></span>
+                <span><%= category.get("postCount") %> posts (<%= category.get("percentage") %>%)</span>
               </div>
               <div style="height: 20px; background-color: #f0f0f0; border-radius: 5px;">
-                <div style="height: 100%; width: ${category.percentage}%; background-color: ${category.color}; border-radius: 5px;"></div>
+                <div style="height: 100%; width: <%= category.get("percentage") %>%; background-color: <%= category.get("color") %>; border-radius: 5px;"></div>
               </div>
             </div>
-          </c:forEach>
-          <c:if test="${empty categoryDistribution}">
+          <% 
+                }
+            } else {
+          %>
             <div>
               <p>No categories with posts found.</p>
             </div>
-          </c:if>
+          <% } %>
         </div>
       </div>
     </div>
@@ -161,24 +167,31 @@
           </tr>
           </thead>
           <tbody>
-          <c:forEach var="category" items="${categories}">
+          <% 
+            java.util.List<com.example.blog_website.models.Category> categories = 
+                (java.util.List<com.example.blog_website.models.Category>) request.getAttribute("categories");
+            if (categories != null && !categories.isEmpty()) {
+                for (com.example.blog_website.models.Category category : categories) {
+          %>
             <tr>
-              <td>${category.name}</td>
-              <td>${category.description}</td>
+              <td><%= category.getName() %></td>
+              <td><%= category.getDescription() %></td>
               <td>0</td> <!-- Placeholder for post count, would need to be implemented -->
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-primary" data-modal="edit-category-modal" data-category-id="${category.id}">Edit</button>
-                  <button class="btn btn-sm btn-danger" data-modal="delete-category-modal" data-category-id="${category.id}">Delete</button>
+                  <button class="btn btn-sm btn-primary" data-modal="edit-category-modal" data-category-id="<%= category.getId() %>">Edit</button>
+                  <button class="btn btn-sm btn-danger" data-modal="delete-category-modal" data-category-id="<%= category.getId() %>">Delete</button>
                 </div>
               </td>
             </tr>
-          </c:forEach>
-          <c:if test="${empty categories}">
+          <% 
+                }
+            } else {
+          %>
             <tr>
               <td colspan="4" class="text-center">No categories found. Add a new category to get started.</td>
             </tr>
-          </c:if>
+          <% } %>
           </tbody>
         </table>
       </div>

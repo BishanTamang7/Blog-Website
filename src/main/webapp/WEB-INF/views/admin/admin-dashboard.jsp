@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InsightHub Admin - Dashboard</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin/admin.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="admin-container">
@@ -131,17 +130,22 @@
           </thead>
           <tbody>
           <!-- Loop through recent posts -->
-          <% if (request.getAttribute("recentPosts") != null) { %>
-          <c:forEach var="post" items="${recentPosts}">
+          <% if (request.getAttribute("recentPosts") != null) { 
+              java.util.List<java.util.Map<String, Object>> recentPosts = 
+                  (java.util.List<java.util.Map<String, Object>>) request.getAttribute("recentPosts");
+              for (java.util.Map<String, Object> post : recentPosts) {
+          %>
             <tr>
-              <td>${post.title}</td>
-              <td>${post.author}</td>
-              <td>${post.category}</td>
-              <td>${post.createdAt}</td>
-              <td>${post.views}</td>
+              <td><%= post.get("title") %></td>
+              <td><%= post.get("author") %></td>
+              <td><%= post.get("category") %></td>
+              <td><%= post.get("createdAt") %></td>
+              <td><%= post.get("views") %></td>
             </tr>
-          </c:forEach>
-          <% } else { %>
+          <% 
+              }
+             } else { 
+          %>
           <tr>
             <td colspan="5">No recent posts found</td>
           </tr>
@@ -158,17 +162,22 @@
         </div>
         <ul style="list-style: none; padding: 0;">
           <!-- Loop through new users -->
-          <% if (request.getAttribute("newUsers") != null) { %>
-          <c:forEach var="user" items="${newUsers}">
+          <% if (request.getAttribute("newUsers") != null) { 
+              java.util.List<java.util.Map<String, Object>> newUsers = 
+                  (java.util.List<java.util.Map<String, Object>>) request.getAttribute("newUsers");
+              for (java.util.Map<String, Object> user : newUsers) {
+          %>
             <li style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; align-items: center;">
-              <div style="width: 40px; height: 40px; background-color: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 15px;">${user.initials}</div>
+              <div style="width: 40px; height: 40px; background-color: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 15px;"><%= user.get("initials") %></div>
               <div>
-                <h4 style="margin: 0;">${user.username}</h4>
-                <p style="margin: 5px 0 0; color: var(--text-light); font-size: 0.9rem;">Joined: ${user.joinedAgo}</p>
+                <h4 style="margin: 0;"><%= user.get("username") %></h4>
+                <p style="margin: 5px 0 0; color: var(--text-light); font-size: 0.9rem;">Joined: <%= user.get("joinedAgo") %></p>
               </div>
             </li>
-          </c:forEach>
-          <% } else { %>
+          <% 
+              }
+             } else { 
+          %>
           <li style="padding: 12px 0;">No new users found</li>
           <% } %>
         </ul>
@@ -185,19 +194,24 @@
           <!-- Simple bar chart representation -->
           <div style="display: flex; flex-direction: column; gap: 15px;">
             <!-- Loop through category distribution -->
-            <% if (request.getAttribute("categoryDistribution") != null) { %>
-            <c:forEach var="category" items="${categoryDistribution}">
+            <% if (request.getAttribute("categoryDistribution") != null) { 
+                java.util.List<java.util.Map<String, Object>> categoryDistribution = 
+                    (java.util.List<java.util.Map<String, Object>>) request.getAttribute("categoryDistribution");
+                for (java.util.Map<String, Object> category : categoryDistribution) {
+            %>
               <div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span>${category.name}</span>
-                  <span>${category.percentage}%</span>
+                  <span><%= category.get("name") %></span>
+                  <span><%= category.get("percentage") %>%</span>
                 </div>
                 <div style="height: 10px; background-color: #f0f0f0; border-radius: 5px;">
-                  <div style="height: 100%; width: ${category.percentage}%; background-color: ${category.color}; border-radius: 5px;"></div>
+                  <div style="height: 100%; width: <%= category.get("percentage") %>%; background-color: <%= category.get("color") %>; border-radius: 5px;"></div>
                 </div>
               </div>
-            </c:forEach>
-            <% } else { %>
+            <% 
+                }
+               } else { 
+            %>
             <div>No category data available</div>
             <% } %>
           </div>

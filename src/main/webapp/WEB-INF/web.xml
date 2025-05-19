@@ -12,7 +12,7 @@
     <!-- Servlet Mappings -->
     <servlet>
         <servlet-name>UserManagementServlet</servlet-name>
-        <servlet-class>com.example.insighthub.controllers.admin.UserManagementServlet</servlet-class>
+        <servlet-class>com.example.blog_website.controllers.admin.UserManagementServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserManagementServlet</servlet-name>
@@ -21,7 +21,7 @@
 
     <servlet>
         <servlet-name>PostManagementServlet</servlet-name>
-        <servlet-class>com.example.insighthub.controllers.admin.PostManagementServlet</servlet-class>
+        <servlet-class>com.example.blog_website.controllers.admin.PostManagementServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PostManagementServlet</servlet-name>
@@ -30,7 +30,7 @@
 
     <servlet>
         <servlet-name>CategoryManagementServlet</servlet-name>
-        <servlet-class>com.example.insighthub.controllers.admin.CategoryManagementServlet</servlet-class>
+        <servlet-class>com.example.blog_website.controllers.admin.CategoryManagementServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CategoryManagementServlet</servlet-name>
