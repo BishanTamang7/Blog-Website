@@ -1,4 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.blog_website.models.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+    String initial = user.getFirstName() != null && !user.getFirstName().isEmpty() ? 
+        user.getFirstName().substring(0, 1) : 
+        user.getUsername().substring(0, 1);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +17,7 @@
 <body>
 <!-- Header/Navigation Bar -->
 <nav class="navbar">
-    <div class="logo">InsightHub</div>
+    <div class="logo"><a href="${pageContext.request.contextPath}/user/user-dashboard">InsightHub</a></div>
 
     <div class="search-container">
         <div class="search-bar">
@@ -31,27 +38,33 @@
         </div>
 
         <div class="profile" id="profileButton">
-            D
+            <% 
+            if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+            %>
+                <img src="${pageContext.request.contextPath}/<%= user.getProfileImage() %>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <% } else { %>
+                <%= initial.toUpperCase() %>
+            <% } %>
             <!-- Profile Dropdown Menu -->
             <div class="profile-dropdown">
-                <div class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/profile" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9h4v4h-4v-4zm0-6h4v4h-4V5z"></path>
                     </svg>
                     Profile
-                </div>
-                <div class="dropdown-item">
+                </a>
+                <a href="#" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V8h2v4zm0 4h-2v-2h2v2z"></path>
                     </svg>
                     Draft
-                </div>
-                <div class="dropdown-item">
+                </a>
+                <a href="#" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"></path>
                     </svg>
                     My Stories
-                </div>
+                </a>
                 <div class="dropdown-divider"></div>
                 <a href="${pageContext.request.contextPath}/logout" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">

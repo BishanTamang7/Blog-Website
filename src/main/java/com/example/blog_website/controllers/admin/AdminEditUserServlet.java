@@ -18,6 +18,7 @@ public class AdminEditUserServlet extends HttpServlet {
         // Get user ID from request
         String userIdStr = request.getParameter("id");
         System.out.println("[DEBUG] AdminEditUserServlet doGet - Raw user ID parameter: " + userIdStr);
+        System.out.println("[DEBUG] AdminEditUserServlet doGet - All parameters: " + request.getParameterMap().keySet());
 
         if (userIdStr == null || userIdStr.trim().isEmpty()) {
             System.out.println("[DEBUG] AdminEditUserServlet doGet - User ID is null or empty");

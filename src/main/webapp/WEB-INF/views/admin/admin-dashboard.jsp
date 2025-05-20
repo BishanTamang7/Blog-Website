@@ -228,7 +228,7 @@
             <i class="fas fa-user-plus"></i> Add New User
           </a>
           <a href="${pageContext.request.contextPath}/admin/post-management" class="btn btn-success" style="text-align: center;">
-            <i class="fas fa-file-medical"></i> Create New Post
+            <i class="fas fa-file-medical"></i> View Blog Post
           </a>
           <a href="${pageContext.request.contextPath}/admin/category-management" class="btn btn-warning" style="text-align: center;">
             <i class="fas fa-folder-plus"></i> Add New Category

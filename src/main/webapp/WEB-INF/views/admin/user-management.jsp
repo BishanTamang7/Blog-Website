@@ -184,24 +184,28 @@
       <button class="modal-close">&times;</button>
     </div>
     <div class="modal-body">
-      <form class="demo-form" id="add-user-form">
-        <div class="form-group">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" id="username" class="form-control" required>
+      <form class="demo-form compact-form" id="add-user-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" class="form-control" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" class="form-control" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="confirm-password" class="form-label">Confirm Password</label>
+            <input type="password" id="confirm-password" class="form-control" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" id="password" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label for="confirm-password" class="form-label">Confirm Password</label>
-          <input type="password" id="confirm-password" class="form-control" required>
-        </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 10px;">
           <label for="role" class="form-label">Role</label>
           <select id="role" class="form-control">
             <option value="user">User</option>
@@ -225,31 +229,35 @@
       <button class="modal-close">&times;</button>
     </div>
     <div class="modal-body">
-      <form class="demo-form" id="edit-user-form">
+      <form class="demo-form compact-form" id="edit-user-form">
         <input type="hidden" id="edit-user-id">
-        <div class="form-group">
-          <label for="edit-username" class="form-label">Username</label>
-          <input type="text" id="edit-username" class="form-control" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label for="edit-username" class="form-label">Username</label>
+            <input type="text" id="edit-username" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-email" class="form-label">Email</label>
+            <input type="email" id="edit-email" class="form-control" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="edit-email" class="form-label">Email</label>
-          <input type="email" id="edit-email" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label for="edit-role" class="form-label">Role</label>
-          <select id="edit-role" class="form-control">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Account Status</label>
-          <div>
-            <label class="switch">
-              <input type="checkbox" id="edit-status" checked>
-              <span class="slider"></span>
-            </label>
-            <span id="status-text" style="margin-left: 10px;">Active</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label for="edit-role" class="form-label">Role</label>
+            <select id="edit-role" class="form-control">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Status</label>
+            <div>
+              <label class="switch">
+                <input type="checkbox" id="edit-status" checked>
+                <span class="slider"></span>
+              </label>
+              <span id="status-text" style="margin-left: 10px;">Active</span>
+            </div>
           </div>
         </div>
       </form>
@@ -269,15 +277,17 @@
       <button class="modal-close">&times;</button>
     </div>
     <div class="modal-body">
-      <form class="demo-form" id="reset-password-form">
+      <form class="demo-form compact-form" id="reset-password-form">
         <input type="hidden" id="reset-user-id">
-        <div class="form-group">
-          <label for="new-password" class="form-label">New Password</label>
-          <input type="password" id="new-password" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label for="confirm-new-password" class="form-label">Confirm New Password</label>
-          <input type="password" id="confirm-new-password" class="form-control" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label for="new-password" class="form-label">New Password</label>
+            <input type="password" id="new-password" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm-new-password" class="form-label">Confirm New Password</label>
+            <input type="password" id="confirm-new-password" class="form-control" required>
+          </div>
         </div>
         <div class="form-group">
           <div class="form-check">
@@ -621,10 +631,23 @@
           const userIdNum = parseInt(userId, 10);
           console.log("[DEBUG] Parsed user ID:", userIdNum);
 
-          const url = `${pageContext.request.contextPath}/admin/edit-user?id=${userIdNum}`;
-          console.log("[DEBUG] Fetch URL:", url);
+          // Ensure we have a valid ID parameter
+          const contextPath = "${pageContext.request.contextPath}";
+          const fullPath = window.location.origin + contextPath + "/admin/edit-user";
+          const url = new URL(fullPath);
+          url.searchParams.append('id', userIdNum);
+          console.log("[DEBUG] Context path:", contextPath);
+          console.log("[DEBUG] Full path:", fullPath);
+          console.log("[DEBUG] Fetch URL:", url.toString());
 
-          fetch(url)
+          // Make sure to include credentials and proper headers
+          fetch(url.toString(), {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
                   .then(response => {
                     console.log("[DEBUG] Response status:", response.status);
                     return response.json();

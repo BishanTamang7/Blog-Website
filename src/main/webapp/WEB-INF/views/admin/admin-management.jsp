@@ -282,7 +282,7 @@
                         <i class="fas fa-user-plus"></i> Add New User
                     </a>
                     <a href="${pageContext.request.contextPath}/PostManagementServlet" class="btn btn-success" style="text-align: center;">
-                        <i class="fas fa-file-medical"></i> Create New Post
+                        <i class="fas fa-file-medical"></i> View Blog Post
                     </a>
                     <a href="${pageContext.request.contextPath}/CategoryManagementServlet" class="btn btn-warning" style="text-align: center;">
                         <i class="fas fa-folder-plus"></i> Add New Category

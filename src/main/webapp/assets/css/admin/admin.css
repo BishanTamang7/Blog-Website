@@ -387,6 +387,19 @@ body {
     margin-bottom: 20px;
 }
 
+/* Compact Form */
+.compact-form .form-group {
+    margin-bottom: 10px;
+}
+
+.compact-form label {
+    margin-bottom: 4px;
+}
+
+.compact-form .form-control {
+    padding: 8px 12px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {

@@ -12,6 +12,66 @@ import java.util.Map;
 public class BlogPostDAO {
 
     /**
+     * Gets the count of published posts by a specific user
+     * @param userId the ID of the user
+     * @return the count of published posts by the user
+     */
+    public int getPublishedPostCountByUser(int userId) {
+        String sql = "SELECT COUNT(*) FROM blog_posts WHERE author_id = ? AND status = 'PUBLISHED'";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnectionUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            return 0;
+        } catch (SQLException e) {
+            System.err.println("Error getting published post count by user: " + e.getMessage());
+            return 0;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+
+    /**
+     * Gets the total view count of posts by a specific user
+     * @param userId the ID of the user
+     * @return the total view count of posts by the user
+     */
+    public int getTotalViewCountByUser(int userId) {
+        String sql = "SELECT SUM(view_count) FROM blog_posts WHERE author_id = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnectionUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            return 0;
+        } catch (SQLException e) {
+            System.err.println("Error getting total view count by user: " + e.getMessage());
+            return 0;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+
+    /**
      * Gets the total count of blog posts
      * @return the count of all blog posts
      */
