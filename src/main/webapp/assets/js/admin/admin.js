@@ -132,19 +132,41 @@ function initForms() {
 
 // Show notification
 function showNotification(message, type = 'info') {
+    // Create overlay element if it doesn't exist
+    let overlay = document.querySelector('.notification-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'notification-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.zIndex = '999';
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s ease';
+        document.body.appendChild(overlay);
+    }
+
     // Create notification element if it doesn't exist
     let notification = document.querySelector('.notification');
     if (!notification) {
         notification = document.createElement('div');
         notification.className = 'notification';
         notification.style.position = 'fixed';
-        notification.style.top = '20px';
-        notification.style.right = '20px';
-        notification.style.padding = '15px 20px';
-        notification.style.borderRadius = '4px';
+        notification.style.top = '50%';
+        notification.style.left = '50%';
+        notification.style.transform = 'translate(-50%, -50%)';
+        notification.style.padding = '20px 30px';
+        notification.style.borderRadius = '6px';
         notification.style.color = 'white';
+        notification.style.fontSize = '16px';
+        notification.style.fontWeight = 'bold';
+        notification.style.textAlign = 'center';
+        notification.style.minWidth = '250px';
         notification.style.zIndex = '1000';
-        notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        notification.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
         notification.style.transition = 'all 0.3s ease';
         notification.style.opacity = '0';
         document.body.appendChild(notification);
@@ -165,17 +187,20 @@ function showNotification(message, type = 'info') {
             notification.style.backgroundColor = 'var(--primary-color)';
     }
 
-    // Set message and show notification
+    // Set message and show notification and overlay
     notification.textContent = message;
     notification.style.opacity = '1';
+    overlay.style.opacity = '1';
 
-    // Hide notification after 3 seconds
+    // Hide notification and overlay after 5 seconds
     setTimeout(() => {
         notification.style.opacity = '0';
+        overlay.style.opacity = '0';
         setTimeout(() => {
             notification.remove();
+            overlay.remove();
         }, 300);
-    }, 3000);
+    }, 5000);
 }
 
 // Data table functionality

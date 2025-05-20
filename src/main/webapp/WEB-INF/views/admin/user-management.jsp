@@ -412,8 +412,11 @@
               .then(data => {
                 if (data.success) {
                   showNotification('User created successfully!', 'success');
-                  // Reload page to show new user
-                  window.location.reload();
+                  // Delay reload to allow user to see the notification
+                  setTimeout(() => {
+                    // Reload page to show new user
+                    window.location.reload();
+                  }, 3000); // 3 seconds delay
                 } else {
                   let errorMessage = 'Failed to create user';
                   if (data.error) {
@@ -592,8 +595,11 @@
               .then(data => {
                 if (data.success) {
                   showNotification('User deleted successfully!', 'success');
-                  // Reload page to update user list
-                  window.location.reload();
+                  // Delay reload to allow user to see the notification
+                  setTimeout(() => {
+                    // Reload page to update user list
+                    window.location.reload();
+                  }, 3000); // 3 seconds delay
                 } else {
                   let errorMessage = 'Failed to delete user';
                   if (data.error) {
