@@ -79,6 +79,39 @@ public class CategoryDAO {
     }
 
     /**
+     * Gets categories with pagination
+     * @param page the page number (1-based)
+     * @param itemsPerPage the number of items per page
+     * @return a list of categories for the specified page
+     */
+    public List<Category> getPaginatedCategories(int page, int itemsPerPage) {
+        String sql = "SELECT * FROM categories ORDER BY name ASC LIMIT ? OFFSET ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Category> categories = new ArrayList<>();
+
+        try {
+            conn = DbConnectionUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, itemsPerPage);
+            stmt.setInt(2, (page - 1) * itemsPerPage);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                categories.add(mapResultSetToCategory(rs));
+            }
+
+            return categories;
+        } catch (SQLException e) {
+            System.err.println("Error getting paginated categories: " + e.getMessage());
+            return categories;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+
+    /**
      * Gets a category by ID
      * @param id the category ID to search for
      * @return the category if found, null otherwise

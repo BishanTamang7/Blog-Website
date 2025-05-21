@@ -35,12 +35,42 @@ public class CategoryManagementServlet extends HttpServlet {
             // Handle get category by ID
             handleGetCategory(request, response);
         } else {
-            // Load all categories for the main page
-            List<Category> categories = categoryDAO.getAllCategories();
+            // Get pagination parameters
+            int itemsPerPage = 4; // Show 4 categories per page
+            int currentPage = 1;
+
+            // Get the current page from request parameter
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    currentPage = Integer.parseInt(pageParam);
+                    if (currentPage < 1) currentPage = 1;
+                } catch (NumberFormatException e) {
+                    currentPage = 1;
+                }
+            }
+
+            // Get total categories count
+            int totalCategories = categoryDAO.getCategoryCount();
+
+            // Calculate total pages
+            int totalPages = (int) Math.ceil((double) totalCategories / itemsPerPage);
+
+            // Ensure current page is within valid range
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            }
+
+            // Load paginated categories for the main page
+            List<Category> categories = categoryDAO.getPaginatedCategories(currentPage, itemsPerPage);
             request.setAttribute("categories", categories);
 
+            // Set pagination attributes
+            request.setAttribute("currentPage", currentPage);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("itemsPerPage", itemsPerPage);
+
             // Get real-time data for dashboard
-            int totalCategories = categoryDAO.getCategoryCount();
             String mostPopularCategory = categoryDAO.getMostActiveCategoryName();
             int mostPopularCategoryPostCount = categoryDAO.getMostActiveCategoryPostCount();
             int postsInArt = categoryDAO.getPostCountByCategoryName("Art");

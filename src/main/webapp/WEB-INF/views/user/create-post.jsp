@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.example.blog_website.models.User" %>
 <%
     User user = (User) session.getAttribute("user");
@@ -11,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightHub</title>
+    <title>InsightHub - Create New Blog Post</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/user/user-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -80,6 +81,76 @@
             margin: 0 auto;
             padding: 80px 20px 20px 20px; /* Increased top padding to account for fixed navbar */
             width: 100%;
+        }
+
+        .post-form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea.form-control {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-draft {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-publish {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-draft:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-publish:hover {
+            background-color: #218838;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -158,12 +229,60 @@
     </div>
 <% } %>
 
-<!-- Main Content Area (Placeholder) -->
+<!-- Main Content -->
 <main class="main-content">
-    <!-- Content would go here -->
+    <h1>Create New Blog Post</h1>
+
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-danger">
+            ${errorMessage}
+        </div>
+    </c:if>
+
+    <div class="post-form">
+        <form action="${pageContext.request.contextPath}/user/create-post" method="post">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" value="${param.title}" required>
+                <c:if test="${not empty titleError}">
+                    <div class="error-message">${titleError}</div>
+                </c:if>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" class="form-control" required>${param.content}</textarea>
+                <c:if test="${not empty contentError}">
+                    <div class="error-message">${contentError}</div>
+                </c:if>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="categoryId" class="form-control" required>
+                    <option value="">Select a category</option>
+                    <c:forEach items="${categories}" var="category">
+                        <option value="${category.id}" ${param.categoryId == category.id ? 'selected' : ''}>${category.name}</option>
+                    </c:forEach>
+                </select>
+                <c:if test="${not empty categoryError}">
+                    <div class="error-message">${categoryError}</div>
+                </c:if>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" name="action" value="draft" class="btn btn-draft">
+                    <i class="fas fa-save"></i> Save as Draft
+                </button>
+                <button type="submit" name="action" value="publish" class="btn btn-publish">
+                    <i class="fas fa-paper-plane"></i> Publish
+                </button>
+            </div>
+        </form>
+    </div>
 </main>
 
-<!-- Compact Footer with Left-aligned Links -->
+<!-- Compact Footer -->
 <footer class="footer">
     <div class="footer-container">
         <ul class="footer-links">
@@ -203,12 +322,6 @@
     // JavaScript to toggle the profile dropdown menu and handle alerts
     document.addEventListener('DOMContentLoaded', function() {
         const profileButton = document.getElementById('profileButton');
-        const writeButton = document.querySelector('.write-button');
-
-        // Add click event to write button to navigate to create-post page
-        writeButton.addEventListener('click', function() {
-            window.location.href = '${pageContext.request.contextPath}/user/create-post';
-        });
 
         // Toggle dropdown when profile button is clicked
         profileButton.addEventListener('click', function(event) {

@@ -30,7 +30,10 @@ public class UserProfileServlet extends HttpServlet {
         // Check for success message in session
         String successMessage = (String) request.getSession().getAttribute("successMessage");
         if (successMessage != null) {
-            request.setAttribute("successMessage", successMessage);
+            // Only transfer success messages that are not related to drafts or publishing posts
+            if (!successMessage.toLowerCase().contains("draft") && !successMessage.toLowerCase().contains("published")) {
+                request.setAttribute("successMessage", successMessage);
+            }
             // Remove from session after transferring to request
             request.getSession().removeAttribute("successMessage");
         }

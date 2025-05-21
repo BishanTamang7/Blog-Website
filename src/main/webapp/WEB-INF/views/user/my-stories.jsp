@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.example.blog_website.models.User" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     User user = (User) session.getAttribute("user");
     String initial = user.getFirstName() != null && !user.getFirstName().isEmpty() ? 
@@ -11,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightHub</title>
+    <title>InsightHub - My Stories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/user/user-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -81,6 +83,105 @@
             padding: 80px 20px 20px 20px; /* Increased top padding to account for fixed navbar */
             width: 100%;
         }
+
+        /* Stories Table */
+        .stories-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stories-table th, 
+        .stories-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stories-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .stories-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stories-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: #6c757d;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-message {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 24px;
+        }
+
+        .btn-create {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4F46E5;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-create:hover {
+            background-color: #4338CA;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -99,11 +200,13 @@
 
     <div class="right-elements">
         <div class="write-button">
-            <svg class="write-icon svg-icon" viewBox="0 0 24 24">
-                <path d="M14 4a.5.5 0 0 0 0-1v1zm7 6a.5.5 0 0 0-1 0h1zm-7-7H4v1h10V3zM3 4v16h1V4H3zm1 17h16v-1H4v1zm17-1V10h-1v10h1zm-1 1a1 1 0 0 0 1-1h-1v1zM3 20a1 1 0 0 0 1 1v-1H3zM4 3a1 1 0 0 0-1 1h1V3z"></path>
-                <path d="M17.5 4.5l-8.46 8.46a.25.25 0 0 0-.06.1l-.82 2.47c-.07.2.12.38.31.31l2.47-.82a.25.25 0 0 0 .1-.06L19.5 6.5m-2-2l2.32-2.32c.1-.1.26-.1.36 0l1.64 1.64c.1.1.1.26 0 .36L19.5 6.5"></path>
-            </svg>
-            <span class="write-text">Write</span>
+            <a href="${pageContext.request.contextPath}/user/create-post" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+                <svg class="write-icon svg-icon" viewBox="0 0 24 24">
+                    <path d="M14 4a.5.5 0 0 0 0-1v1zm7 6a.5.5 0 0 0-1 0h1zm-7-7H4v1h10V3zM3 4v16h1V4H3zm1 17h16v-1H4v1zm17-1V10h-1v10h1zm-1 1a1 1 0 0 0 1-1h-1v1zM3 20a1 1 0 0 0 1 1v-1H3zM4 3a1 1 0 0 0-1 1h1V3z"></path>
+                    <path d="M17.5 4.5l-8.46 8.46a.25.25 0 0 0-.06.1l-.82 2.47c-.07.2.12.38.31.31l2.47-.82a.25.25 0 0 0 .1-.06L19.5 6.5m-2-2l2.32-2.32c.1-.1.26-.1.36 0l1.64 1.64c.1.1.1.26 0 .36L19.5 6.5"></path>
+                </svg>
+                <span class="write-text">Write</span>
+            </a>
         </div>
 
         <div class="profile" id="profileButton">
@@ -158,12 +261,55 @@
     </div>
 <% } %>
 
-<!-- Main Content Area (Placeholder) -->
+<!-- Main Content -->
 <main class="main-content">
-    <!-- Content would go here -->
+    <h1>My Stories</h1>
+
+    <c:choose>
+        <c:when test="${empty publishedPosts}">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2 class="empty-state-title">No Published Stories Yet</h2>
+                <p class="empty-state-message">Start sharing your insights with the community by creating your first blog post.</p>
+                <a href="${pageContext.request.contextPath}/user/create-post" class="btn-create">
+                    <i class="fas fa-plus"></i> Create Your First Post
+                </a>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <table class="stories-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Views</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${publishedPosts}" var="post">
+                        <tr>
+                            <td>${post.title}</td>
+                            <td><fmt:formatDate value="${post.createdAt}" pattern="MMM dd, yyyy" /></td>
+                            <td>${post.category}</td>
+                            <td>${post.views}</td>
+                            <td>
+                                <button class="action-btn btn-delete" onclick="confirmDelete(${post.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:otherwise>
+    </c:choose>
 </main>
 
-<!-- Compact Footer with Left-aligned Links -->
+<!-- Compact Footer -->
 <footer class="footer">
     <div class="footer-container">
         <ul class="footer-links">
@@ -203,12 +349,6 @@
     // JavaScript to toggle the profile dropdown menu and handle alerts
     document.addEventListener('DOMContentLoaded', function() {
         const profileButton = document.getElementById('profileButton');
-        const writeButton = document.querySelector('.write-button');
-
-        // Add click event to write button to navigate to create-post page
-        writeButton.addEventListener('click', function() {
-            window.location.href = '${pageContext.request.contextPath}/user/create-post';
-        });
 
         // Toggle dropdown when profile button is clicked
         profileButton.addEventListener('click', function(event) {
@@ -242,6 +382,154 @@
             }, 4000); // 4 seconds
         }
     });
+
+    // Function to confirm post deletion
+    function confirmDelete(postId) {
+        // Set the post ID in the hidden field
+        document.getElementById('delete-post-id').value = postId;
+        // Show the delete confirmation modal
+        document.getElementById('delete-post-modal').classList.add('active');
+    }
+</script>
+
+<!-- Delete Post Modal -->
+<div class="modal-overlay" id="delete-post-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Delete Post</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="delete-post-id">
+      <p>Are you sure you want to delete this post?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline modal-cancel">Cancel</button>
+      <button class="btn btn-danger" id="delete-post-submit">Delete Post</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal Styles */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>
+
+<script>
+  // Modal functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const deletePostModal = document.getElementById('delete-post-modal');
+    const modalCloseButtons = deletePostModal.querySelectorAll('.modal-close, .modal-cancel');
+    const deletePostSubmit = document.getElementById('delete-post-submit');
+
+    // Close modal when clicking close button or cancel button
+    modalCloseButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        deletePostModal.classList.remove('active');
+      });
+    });
+
+    // Close modal when clicking outside the modal
+    deletePostModal.addEventListener('click', function(event) {
+      if (event.target === deletePostModal) {
+        deletePostModal.classList.remove('active');
+      }
+    });
+
+    // Handle delete post submission
+    deletePostSubmit.addEventListener('click', function() {
+      const postId = document.getElementById('delete-post-id').value;
+      window.location.href = '${pageContext.request.contextPath}/user/delete-post?id=' + postId;
+    });
+  });
 </script>
 </body>
 </html>

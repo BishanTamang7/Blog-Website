@@ -7,6 +7,27 @@
   <title>InsightHub Admin - Post Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin/admin.css">
+  <style>
+    .alert {
+      padding: 15px;
+      margin: 0 0 20px 0;
+      border-radius: 4px;
+      text-align: center;
+      position: relative;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
 </head>
 <body>
 <div class="admin-container">
@@ -46,6 +67,20 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <!-- Display success or error messages if any -->
+    <% if (session.getAttribute("successMessage") != null) { %>
+      <div class="alert alert-success">
+        <%= session.getAttribute("successMessage") %>
+        <% session.removeAttribute("successMessage"); %>
+      </div>
+    <% } %>
+    <% if (session.getAttribute("errorMessage") != null) { %>
+      <div class="alert alert-danger">
+        <%= session.getAttribute("errorMessage") %>
+        <% session.removeAttribute("errorMessage"); %>
+      </div>
+    <% } %>
+
     <div class="page-header">
       <h1 class="page-title">Post Management</h1>
     </div>
@@ -182,18 +217,6 @@
         <% } %>
 
         <% 
-          if (totalPages != null) {
-            for (int i = 1; i <= totalPages; i++) {
-              if (currentPage != null && currentPage == i) {
-        %>
-              <span class="pagination-item active"><%= i %></span>
-        <%  } else { %>
-              <a href="?page=<%= i %>" class="pagination-item"><%= i %></a>
-        <%  
-              }
-            }
-          }
-
           if (currentPage != null && totalPages != null && currentPage < totalPages) {
         %>
           <a href="?page=<%= currentPage + 1 %>" class="pagination-item">Next</a>
@@ -258,10 +281,7 @@ npm start</code></pre>
     </div>
     <div class="modal-body">
       <input type="hidden" id="delete-post-id">
-      <p>Are you sure you want to delete this post? This action cannot be undone.</p>
-      <div class="alert alert-warning">
-        <i class="fas fa-exclamation-triangle"></i> Warning: All comments associated with this post will also be deleted.
-      </div>
+      <p>Are you sure you want to delete this post?</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline modal-cancel">Cancel</button>
@@ -293,6 +313,25 @@ npm start</code></pre>
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize data table
     initDataTable('posts-table');
+
+    // Auto-hide alerts after 4 seconds
+    const alerts = document.querySelectorAll('.alert');
+    if (alerts.length > 0) {
+      setTimeout(function() {
+        alerts.forEach(function(alert) {
+          alert.style.opacity = '1';
+          alert.style.transition = 'opacity 0.5s ease';
+
+          // Fade out
+          alert.style.opacity = '0';
+
+          // Remove from DOM after fade completes
+          setTimeout(function() {
+            alert.remove();
+          }, 500);
+        });
+      }, 4000); // 4 seconds
+    }
 
     // Initialize logout functionality
     const logoutBtn = document.getElementById('logout-btn');
@@ -336,15 +375,8 @@ npm start</code></pre>
     deletePostSubmit.addEventListener('click', function() {
       const postId = document.getElementById('delete-post-id').value;
 
-      // In a real application, this would make an API call
-      deletePost(postId);
-
-      // Remove the row from the table
-      const row = document.querySelector(`[data-post-id="${postId}"]`).closest('tr');
-      row.remove();
-
-      // Close modal
-      document.getElementById('delete-post-modal').classList.remove('active');
+      // Redirect to the AdminDeletePostServlet
+      window.location.href = '${pageContext.request.contextPath}/admin/delete-post?id=' + postId;
     });
 
     // Set post ID when opening delete modal

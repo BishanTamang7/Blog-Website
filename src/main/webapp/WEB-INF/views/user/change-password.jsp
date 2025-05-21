@@ -22,6 +22,25 @@
             overflow: hidden; /* Prevent scrolling on the body */
         }
 
+        /* Navbar fixed positioning */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Override profile dropdown positioning for fixed navbar */
+        .profile-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            z-index: 1001; /* Higher than navbar to ensure it appears on top */
+        }
+
         .footer {
             z-index: 50; /* Ensure footer is below the password card */
         }
@@ -30,7 +49,7 @@
             flex: 1;
             max-width: 800px;
             margin: 0 auto;
-            padding: 25px 20px;
+            padding: 80px 20px 25px 20px; /* Increased top padding to account for fixed navbar */
             width: 100%;
             height: calc(100vh - 60px); /* Adjust based on navbar height */
             position: relative;
@@ -133,8 +152,16 @@
 
         .alert {
             padding: 15px;
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto;
             border-radius: 4px;
+            text-align: center;
+            width: 40%;
+            position: fixed;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .alert-success {
@@ -177,6 +204,51 @@
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
+        }
+
+        /* Password visibility toggle styles */
+        .password-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eye-icon {
+            width: 24px;
+            height: 24px;
+            fill: #6c757d;
+        }
+
+        .password-toggle-btn:hover .eye-icon {
+            fill: #4F46E5;
+        }
+
+        /* By default, show the open eye and hide the closed eye */
+        .eye-closed {
+            display: none;
+        }
+
+        /* When password is visible, show closed eye and hide open eye */
+        .password-visible .eye-open {
+            display: none;
+        }
+
+        .password-visible .eye-closed {
+            display: block;
         }
     </style>
 </head>
@@ -225,13 +297,13 @@
                     </svg>
                     Profile
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/draft" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V8h2v4zm0 4h-2v-2h2v2z"></path>
                     </svg>
                     Draft
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/my-stories" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"></path>
                     </svg>
@@ -272,7 +344,15 @@
         <form action="${pageContext.request.contextPath}/change-password" method="post" id="passwordForm">
             <div class="form-group">
                 <label for="oldPassword" class="form-label">Current Password</label>
-                <input type="password" id="oldPassword" name="oldPassword" class="form-control" required>
+                <div class="password-input-container">
+                    <input type="password" id="oldPassword" name="oldPassword" class="form-control" required>
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('oldPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24">
+                            <path class="eye-open" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
+                            <path class="eye-closed" d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"></path>
+                        </svg>
+                    </button>
+                </div>
                 <% if (request.getAttribute("oldPasswordError") != null) { %>
                     <p class="error-text"><%= request.getAttribute("oldPasswordError") %></p>
                 <% } %>
@@ -280,7 +360,15 @@
 
             <div class="form-group">
                 <label for="newPassword" class="form-label">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                <div class="password-input-container">
+                    <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('newPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24">
+                            <path class="eye-open" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
+                            <path class="eye-closed" d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"></path>
+                        </svg>
+                    </button>
+                </div>
                 <% if (request.getAttribute("newPasswordError") != null) { %>
                     <p class="error-text"><%= request.getAttribute("newPasswordError") %></p>
                 <% } %>
@@ -288,7 +376,15 @@
 
             <div class="form-group">
                 <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                <div class="password-input-container">
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirmPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24">
+                            <path class="eye-open" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
+                            <path class="eye-closed" d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"></path>
+                        </svg>
+                    </button>
+                </div>
                 <% if (request.getAttribute("confirmPasswordError") != null) { %>
                     <p class="error-text"><%= request.getAttribute("confirmPasswordError") %></p>
                 <% } %>
@@ -312,12 +408,36 @@
 </main>
 
 <script>
+    // Function to toggle password visibility
+    function togglePasswordVisibility(inputId) {
+        const passwordInput = document.getElementById(inputId);
+        const toggleButton = passwordInput.parentElement.querySelector('.password-toggle-btn');
+
+        // Toggle the input type between password and text
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.classList.add('password-visible');
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.classList.remove('password-visible');
+        }
+    }
+
     // JavaScript to toggle the profile dropdown menu
     document.addEventListener('DOMContentLoaded', function() {
         const profileButton = document.getElementById('profileButton');
+        const writeButton = document.querySelector('.write-button');
         const passwordForm = document.getElementById('passwordForm');
         const newPasswordInput = document.getElementById('newPassword');
         const confirmPasswordInput = document.getElementById('confirmPassword');
+
+        // Initialize password toggle buttons
+        const passwordToggleBtns = document.querySelectorAll('.password-toggle-btn');
+
+        // Add click event to write button to navigate to create-post page
+        writeButton.addEventListener('click', function() {
+            window.location.href = '${pageContext.request.contextPath}/user/create-post';
+        });
 
         // Toggle dropdown when profile button is clicked
         profileButton.addEventListener('click', function(event) {
@@ -359,6 +479,25 @@
                 confirmPasswordInput.reportValidity();
             }
         });
+
+        // Auto-hide alerts after 4 seconds
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    alert.style.opacity = '1';
+                    alert.style.transition = 'opacity 0.5s ease';
+
+                    // Fade out
+                    alert.style.opacity = '0';
+
+                    // Remove from DOM after fade completes
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 4000); // 4 seconds
+        }
     });
 </script>
 

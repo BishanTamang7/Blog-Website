@@ -26,11 +26,30 @@
             z-index: 50; /* Ensure footer is below the profile card */
         }
 
+        /* Navbar fixed positioning */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Override profile dropdown positioning for fixed navbar */
+        .profile-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            z-index: 1001; /* Higher than navbar to ensure it appears on top */
+        }
+
         .main-content {
             flex: 1;
             max-width: 800px;
             margin: 0 auto;
-            padding: 25px 20px;
+            padding: 80px 20px 25px 20px; /* Increased top padding to account for fixed navbar */
             width: 100%;
             height: calc(100vh - 60px); /* Adjust based on navbar height */
             position: relative;
@@ -133,8 +152,16 @@
 
         .alert {
             padding: 15px;
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto;
             border-radius: 4px;
+            text-align: center;
+            width: 40%;
+            position: fixed;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .alert-success {
@@ -201,13 +228,13 @@
                     </svg>
                     Profile
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/draft" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V8h2v4zm0 4h-2v-2h2v2z"></path>
                     </svg>
                     Draft
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/my-stories" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"></path>
                     </svg>
@@ -297,6 +324,12 @@
         const profileForm = document.getElementById('profileForm');
         const emailInput = document.getElementById('email');
         const profileImageInput = document.getElementById('profileImage');
+        const writeButton = document.querySelector('.write-button');
+
+        // Add click event to write button to navigate to create-post page
+        writeButton.addEventListener('click', function() {
+            window.location.href = '${pageContext.request.contextPath}/user/create-post';
+        });
 
         // Toggle dropdown when profile button is clicked
         profileButton.addEventListener('click', function(event) {
@@ -310,6 +343,25 @@
                 profileButton.classList.remove('active');
             }
         });
+
+        // Auto-hide alerts after 4 seconds
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    alert.style.opacity = '1';
+                    alert.style.transition = 'opacity 0.5s ease';
+
+                    // Fade out
+                    alert.style.opacity = '0';
+
+                    // Remove from DOM after fade completes
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 4000); // 4 seconds
+        }
 
         // Email validation
         emailInput.addEventListener('input', function() {

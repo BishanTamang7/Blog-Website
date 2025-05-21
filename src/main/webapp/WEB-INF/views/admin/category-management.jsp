@@ -7,6 +7,30 @@
   <title>InsightHub Admin - Category Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin/admin.css">
+  <style>
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    .page-link {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--primary-color);
+      background-color: #fff;
+      transition: all 0.3s ease;
+    }
+    .page-link:hover {
+      background-color: #f5f5f5;
+    }
+    .page-link.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+  </style>
 </head>
 <body>
 <div class="admin-container">
@@ -90,7 +114,7 @@
             </div>
             <div>
               <h3 style="margin: 0; font-size: 24px;">${mostPopularCategoryPostCount}</h3>
-              <p style="margin: 5px 0 0; color: var(--text-light);">Most Posts</p>
+              <p style="margin: 5px 0 0; color: var(--text-light);">Most Blog Posts</p>
             </div>
           </div>
         </div>
@@ -103,7 +127,7 @@
             </div>
             <div>
               <h3 style="margin: 0; font-size: 24px;">${postsInArt}</h3>
-              <p style="margin: 5px 0 0; color: var(--text-light);">Posts in Art</p>
+              <p style="margin: 5px 0 0; color: var(--text-light);">Posts in Data Science</p>
             </div>
           </div>
         </div>
@@ -121,8 +145,36 @@
           <% 
             java.util.List<java.util.Map<String, Object>> categoryDistribution = 
                 (java.util.List<java.util.Map<String, Object>>) request.getAttribute("categoryDistribution");
+
+            // Pagination variables
+            int itemsPerPage = 4;
+            int currentPage = 1;
+
+            // Get the current page from request parameter
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    currentPage = Integer.parseInt(pageParam);
+                    if (currentPage < 1) currentPage = 1;
+                } catch (NumberFormatException e) {
+                    currentPage = 1;
+                }
+            }
+
             if (categoryDistribution != null && !categoryDistribution.isEmpty()) {
-                for (java.util.Map<String, Object> category : categoryDistribution) {
+                int totalCategories = categoryDistribution.size();
+                int totalPages = (int) Math.ceil((double) totalCategories / itemsPerPage);
+
+                // Ensure current page is within valid range
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                // Calculate start and end indices for the current page
+                int startIndex = (currentPage - 1) * itemsPerPage;
+                int endIndex = Math.min(startIndex + itemsPerPage, totalCategories);
+
+                // Display only categories for the current page
+                for (int i = startIndex; i < endIndex; i++) {
+                    java.util.Map<String, Object> category = categoryDistribution.get(i);
           %>
             <div>
               <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -131,6 +183,28 @@
               </div>
               <div style="height: 20px; background-color: #f0f0f0; border-radius: 5px;">
                 <div style="height: 100%; width: <%= category.get("percentage") %>%; background-color: <%= category.get("color") %>; border-radius: 5px;"></div>
+              </div>
+            </div>
+          <% 
+                }
+
+                // Add pagination controls if there are multiple pages
+                if (totalPages > 1) {
+          %>
+            <div style="display: flex; justify-content: center; margin-top: 20px;">
+              <div class="pagination">
+                <% if (currentPage > 1) { %>
+                  <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= currentPage - 1 %>" class="page-link">&laquo; Previous</a>
+                <% } %>
+
+                <% for (int i = 1; i <= totalPages; i++) { %>
+                  <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= i %>" 
+                     class="page-link <%= (i == currentPage) ? "active" : "" %>"><%= i %></a>
+                <% } %>
+
+                <% if (currentPage < totalPages) { %>
+                  <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= currentPage + 1 %>" class="page-link">Next &raquo;</a>
+                <% } %>
               </div>
             </div>
           <% 
@@ -176,7 +250,7 @@
             <tr>
               <td><%= category.getName() %></td>
               <td><%= category.getDescription() %></td>
-              <td>0</td> <!-- Placeholder for post count, would need to be implemented -->
+              <td><%= new com.example.blog_website.dao.CategoryDAO().getPostCountByCategoryName(category.getName()) %></td>
               <td>
                 <div class="action-buttons">
                   <button class="btn btn-sm btn-primary" data-modal="edit-category-modal" data-category-id="<%= category.getId() %>">Edit</button>
@@ -195,6 +269,29 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Add pagination controls for category list if there are multiple pages -->
+      <% if (request.getAttribute("totalPages") != null && (Integer)request.getAttribute("totalPages") > 1) { 
+           int categoryListCurrentPage = (Integer)request.getAttribute("currentPage");
+           int categoryListTotalPages = (Integer)request.getAttribute("totalPages");
+      %>
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <div class="pagination">
+          <% if (categoryListCurrentPage > 1) { %>
+            <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= categoryListCurrentPage - 1 %>" class="page-link">&laquo; Previous</a>
+          <% } %>
+
+          <% for (int i = 1; i <= categoryListTotalPages; i++) { %>
+            <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= i %>" 
+               class="page-link <%= (i == categoryListCurrentPage) ? "active" : "" %>"><%= i %></a>
+          <% } %>
+
+          <% if (categoryListCurrentPage < categoryListTotalPages) { %>
+            <a href="${pageContext.request.contextPath}/admin/category-management?page=<%= categoryListCurrentPage + 1 %>" class="page-link">Next &raquo;</a>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
     </div>
   </main>
 </div>
@@ -270,10 +367,7 @@
     </div>
     <div class="modal-body">
       <input type="hidden" id="delete-category-id">
-      <p>Are you sure you want to delete this category? This action cannot be undone.</p>
-      <div class="alert alert-warning">
-        <i class="fas fa-exclamation-triangle"></i> Warning: All posts in this category will be moved to the default category.
-      </div>
+      <p>Are you sure you want to delete this category?</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline modal-cancel">Cancel</button>

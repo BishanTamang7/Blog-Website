@@ -55,18 +55,18 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("totalCategories", totalCategories);
             request.setAttribute("mostActiveCategory", mostActiveCategory);
 
-            // Get recent posts (limit to 5)
-            List<Map<String, Object>> recentPosts = blogPostDAO.getRecentPosts(5);
+            // Get recent posts (limit to 4)
+            List<Map<String, Object>> recentPosts = blogPostDAO.getRecentPosts(4);
             request.setAttribute("recentPosts", recentPosts);
 
-            // Get new users (limit to 5)
+            // Get new users (limit to 4)
             List<User> allUsers = userDAO.getAllUsers();
             List<Map<String, Object>> newUsers = new ArrayList<>();
 
-            // Process only the first 5 users
+            // Process only the first 4 users
             int count = 0;
             for (User user : allUsers) {
-                if (count >= 5) break;
+                if (count >= 4) break;
 
                 Map<String, Object> userData = new HashMap<>();
                 userData.put("username", user.getUsername());

@@ -32,9 +32,9 @@
             margin: 0 auto 20px auto;
             border-radius: 4px;
             text-align: center;
-            width: 80%;
+            width: 40%;
             position: fixed;
-            top: 80px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -362,13 +362,13 @@
                     </svg>
                     Profile
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/draft" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V8h2v4zm0 4h-2v-2h2v2z"></path>
                     </svg>
                     Draft
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="${pageContext.request.contextPath}/user/my-stories" class="dropdown-item">
                     <svg class="dropdown-icon svg-icon" viewBox="0 0 24 24">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"></path>
                     </svg>
@@ -542,6 +542,12 @@
     // JavaScript to toggle the profile dropdown menu and handle alerts
     document.addEventListener('DOMContentLoaded', function() {
         const profileButton = document.getElementById('profileButton');
+        const writeButton = document.querySelector('.write-button');
+
+        // Add click event to write button to navigate to create-post page
+        writeButton.addEventListener('click', function() {
+            window.location.href = '${pageContext.request.contextPath}/user/create-post';
+        });
 
         // Toggle dropdown when profile button is clicked
         profileButton.addEventListener('click', function(event) {

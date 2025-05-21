@@ -193,11 +193,14 @@
         <div style="padding: 20px;">
           <!-- Simple bar chart representation -->
           <div style="display: flex; flex-direction: column; gap: 15px;">
-            <!-- Loop through category distribution -->
+            <!-- Loop through category distribution (limited to 4) -->
             <% if (request.getAttribute("categoryDistribution") != null) { 
                 java.util.List<java.util.Map<String, Object>> categoryDistribution = 
                     (java.util.List<java.util.Map<String, Object>>) request.getAttribute("categoryDistribution");
+                int categoryCount = 0;
                 for (java.util.Map<String, Object> category : categoryDistribution) {
+                    if (categoryCount >= 4) break; // Limit to only 4 categories
+                    categoryCount++;
             %>
               <div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
