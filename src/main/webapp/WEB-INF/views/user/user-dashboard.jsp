@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="com.example.blog_website.models.User" %>
 <%
     User user = (User) session.getAttribute("user");
@@ -81,6 +84,188 @@
             padding: 80px 20px 20px 20px; /* Increased top padding to account for fixed navbar */
             width: 100%;
         }
+
+        /* Section heading styles */
+        .main-content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        /* Post card styles */
+        .posts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .post-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .post-title a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .post-title a:hover {
+            color: #4F46E5;
+        }
+
+        .post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .post-author, .post-date, .post-category, .post-views {
+            display: flex;
+            align-items: center;
+        }
+
+        .post-meta i {
+            margin-right: 5px;
+        }
+
+        .post-excerpt {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #495057;
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #4338CA;
+        }
+
+        /* Empty state styles */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: #6c757d;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-message {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 24px;
+        }
+
+        .btn-create {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4F46E5;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-create:hover {
+            background-color: #4338CA;
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .pagination-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            color: #495057;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .pagination-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .pagination-link.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+
+        .pagination-link i {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -93,7 +278,10 @@
             <svg class="search-icon svg-icon" viewBox="0 0 24 24">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
             </svg>
-            <input type="text" class="search-input" placeholder="Search">
+            <form action="${pageContext.request.contextPath}/search" method="get">
+                <input type="text" class="search-input" name="keyword" placeholder="Search">
+                <button type="submit" style="display:none;">Search</button>
+            </form>
         </div>
     </div>
 
@@ -158,9 +346,89 @@
     </div>
 <% } %>
 
-<!-- Main Content Area (Placeholder) -->
+<!-- Main Content Area -->
 <main class="main-content">
-    <!-- Content would go here -->
+    <h1>Discover Insights</h1>
+    <p class="section-description">Explore the latest blog posts from our community</p>
+
+    <c:choose>
+        <c:when test="${empty publishedPosts}">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2 class="empty-state-title">No Published Stories Yet</h2>
+                <p class="empty-state-message">Be the first to share your insights with the community!</p>
+                <a href="${pageContext.request.contextPath}/user/create-post" class="btn-create">
+                    <i class="fas fa-plus"></i> Create Your First Post
+                </a>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="posts-container">
+                <c:forEach items="${publishedPosts}" var="post">
+                    <div class="post-card">
+                        <h2 class="post-title">
+                            <a href="${pageContext.request.contextPath}/user/view-post?id=${post.id}">${post.title}</a>
+                        </h2>
+                        <div class="post-meta">
+                            <div class="post-author">
+                                <i class="fas fa-user"></i> ${post.author}
+                            </div>
+                            <div class="post-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <fmt:formatDate value="${post.createdAt}" pattern="MMM dd, yyyy" />
+                            </div>
+                            <div class="post-category">
+                                <i class="fas fa-folder"></i>
+                                ${post.category}
+                            </div>
+                            <div class="post-views">
+                                <i class="fas fa-eye"></i>
+                                ${post.views} views
+                            </div>
+                        </div>
+                        <div class="post-excerpt">
+                            ${fn:substring(post.content, 0, 200)}...
+                        </div>
+                        <div class="post-actions">
+                            <a href="${pageContext.request.contextPath}/user/view-post?id=${post.id}" class="btn btn-primary">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+
+            <!-- Pagination -->
+            <c:if test="${totalPages > 1}">
+                <div class="pagination">
+                    <c:if test="${currentPage > 1}">
+                        <a href="${pageContext.request.contextPath}/user/user-dashboard?page=${currentPage - 1}" class="pagination-link">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </c:if>
+
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <c:choose>
+                            <c:when test="${currentPage == i}">
+                                <span class="pagination-link active">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/user/user-dashboard?page=${i}" class="pagination-link">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="${pageContext.request.contextPath}/user/user-dashboard?page=${currentPage + 1}" class="pagination-link">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </c:if>
+                </div>
+            </c:if>
+        </c:otherwise>
+    </c:choose>
 </main>
 
 <!-- Compact Footer with Left-aligned Links -->

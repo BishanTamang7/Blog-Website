@@ -194,7 +194,7 @@
               <td><%= post.get("views") %></td>
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-primary" data-modal="view-post-modal" data-post-id="<%= post.get("id") %>">View</button>
+                  <button class="btn btn-sm btn-primary" data-modal="view-post-modal" data-post-id="<%= post.get("id") %>" data-post-content="<%= post.get("content") %>">View</button>
                   <button class="btn btn-sm btn-danger" data-modal="delete-post-modal" data-post-id="<%= post.get("id") %>">Delete</button>
                 </div>
               </td>
@@ -245,29 +245,12 @@
           <span><strong>Views:</strong> <span id="post-views">1,245</span></span>
         </div>
         <div class="post-content" id="post-content">
-          <p>React is a popular JavaScript library for building user interfaces, particularly single-page applications. It's used for handling the view layer for web and mobile apps. React allows us to create reusable UI components.</p>
-
-          <h3>Why React?</h3>
-          <ul>
-            <li>Declarative: React makes it painless to create interactive UIs.</li>
-            <li>Component-Based: Build encapsulated components that manage their own state.</li>
-            <li>Learn Once, Write Anywhere: React can also render on the server using Node.</li>
-          </ul>
-
-          <h3>Getting Started</h3>
-          <p>To get started with React, you need to have Node.js installed on your machine. Then, you can create a new React application using Create React App:</p>
-
-          <pre><code>npx create-react-app my-app
-cd my-app
-npm start</code></pre>
-
-          <p>This will set up a new React application and start a development server. You can now start building your application!</p>
+          <!-- Post content will be loaded dynamically -->
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline modal-cancel">Close</button>
-      <a href="#" class="btn btn-primary" id="view-on-site">View on Site</a>
     </div>
   </div>
 </div>
@@ -353,6 +336,7 @@ npm start</code></pre>
     viewButtons.forEach(button => {
       button.addEventListener('click', function() {
         const postId = this.getAttribute('data-post-id');
+        const postContent = this.getAttribute('data-post-content');
         document.getElementById('view-post-id').value = postId;
 
         // Get data from the table row
@@ -365,8 +349,8 @@ npm start</code></pre>
         document.getElementById('post-status').className = row.cells[4].querySelector('.badge').className;
         document.getElementById('post-views').textContent = row.cells[5].textContent;
 
-        // Set the view on site link
-        document.getElementById('view-on-site').href = `${pageContext.request.contextPath}/post?id=${postId}`;
+        // Set the post content
+        document.getElementById('post-content').innerHTML = postContent;
       });
     });
 

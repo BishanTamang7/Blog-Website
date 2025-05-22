@@ -543,6 +543,90 @@ public class BlogPostDAO {
     }
 
     /**
+     * Updates the view count of a blog post
+     * @param postId the ID of the post to update
+     * @param viewCount the new view count value
+     * @return true if the update was successful, false otherwise
+     */
+    public boolean updateViewCount(int postId, int viewCount) {
+        String sql = "UPDATE blog_posts SET view_count = ? WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = DbConnectionUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, viewCount);
+            stmt.setInt(2, postId);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating blog post view count: " + e.getMessage());
+            return false;
+        } finally {
+            closeResources(conn, stmt, null);
+        }
+    }
+
+    /**
+     * Searches for blog posts by keyword in title or content
+     * @param keyword the search keyword
+     * @param page the page number (1-based)
+     * @param pageSize the number of posts per page
+     * @return a list of maps containing post data
+     */
+    public List<Map<String, Object>> searchPosts(String keyword, int page, int pageSize) {
+        StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT p.id, p.title, p.content, p.status, p.view_count, p.created_at, " +
+                        "u.username as author, c.name as category " +
+                        "FROM blog_posts p " +
+                        "JOIN users u ON p.author_id = u.id " +
+                        "JOIN categories c ON p.category_id = c.id " +
+                        "WHERE p.status = 'PUBLISHED' AND (p.title LIKE ? OR p.content LIKE ?) " +
+                        "ORDER BY p.created_at DESC LIMIT ? OFFSET ?"
+        );
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Map<String, Object>> posts = new ArrayList<>();
+
+        try {
+            conn = DbConnectionUtil.getConnection();
+            stmt = conn.prepareStatement(sqlBuilder.toString());
+
+            String searchPattern = "%" + keyword + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setInt(3, pageSize);
+            stmt.setInt(4, (page - 1) * pageSize);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> post = new HashMap<>();
+                post.put("id", rs.getInt("id"));
+                post.put("title", rs.getString("title"));
+                post.put("content", rs.getString("content"));
+                post.put("author", rs.getString("author"));
+                post.put("category", rs.getString("category"));
+                post.put("status", rs.getString("status"));
+                post.put("views", rs.getInt("view_count"));
+                post.put("createdAt", rs.getTimestamp("created_at"));
+                posts.add(post);
+            }
+
+            return posts;
+        } catch (SQLException e) {
+            System.err.println("Error searching posts: " + e.getMessage());
+            return posts;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+
+    /**
      * Closes database resources
      * @param conn the Connection to close
      * @param stmt the PreparedStatement to close

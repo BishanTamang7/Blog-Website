@@ -194,7 +194,10 @@
             <svg class="search-icon svg-icon" viewBox="0 0 24 24">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
             </svg>
-            <input type="text" class="search-input" placeholder="Search">
+            <form action="${pageContext.request.contextPath}/search" method="get">
+                <input type="text" class="search-input" name="keyword" placeholder="Search">
+                <button type="submit" style="display:none;">Search</button>
+            </form>
         </div>
     </div>
 
@@ -292,11 +295,14 @@
                 <tbody>
                     <c:forEach items="${publishedPosts}" var="post">
                         <tr>
-                            <td>${post.title}</td>
+                            <td><a href="${pageContext.request.contextPath}/user/view-post?id=${post.id}" style="color: #4F46E5; text-decoration: none; font-weight: 500;">${post.title}</a></td>
                             <td><fmt:formatDate value="${post.createdAt}" pattern="MMM dd, yyyy" /></td>
                             <td>${post.category}</td>
                             <td>${post.views}</td>
                             <td>
+                                <a href="${pageContext.request.contextPath}/user/view-post?id=${post.id}" class="action-btn btn-primary" style="background-color: #4F46E5; color: white; margin-right: 5px;">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
                                 <button class="action-btn btn-delete" onclick="confirmDelete(${post.id})">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
